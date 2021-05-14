@@ -1,2 +1,2 @@
-# grafana-ppc64le
+# Grafana container for ppc64le
 Container build of Grafana for ppc64le systems
