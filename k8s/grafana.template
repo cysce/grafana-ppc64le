@@ -62,7 +62,7 @@ spec:
           value: "passw0rd"
         volumeMounts:
         - name: config-volume
-          mountPath: /usr/grafana/grafana.ini
+          mountPath: /etc/grafana
         - name: base
           mountPath: /var/lib/grafana
       volumes:
