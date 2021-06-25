@@ -12,7 +12,7 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: <PATH>
+    path: <PATH>/data
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
