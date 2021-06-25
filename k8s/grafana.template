@@ -1,0 +1,117 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: coc-v2-grafana
+  labels:
+    name: coc-v2-grafana
+spec:
+  capacity:
+    storage: 200Gi
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: <PATH>
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: coc-v2-grafana
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
+  selector:
+    matchLabels:
+      name: coc-v2-grafana
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coc-v2-grafana
+  labels:
+    app: coc-v2-grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coc-v2-grafana
+  template:
+    metadata:
+      labels:
+        app: coc-v2-grafana
+    spec:
+      containers:
+      - name: coc-v2-grafana
+        imagePullPolicy: IfNotPresent
+        image: docker.io/cysce/grafana-ppc64le:8.0.3
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-clock-panel,yesoreyeram-boomtheme-panel,savantly-heatmap-panel,ryantxu-ajax-panel,grafana-worldmap-panel,ae3e-plotly-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource"
+        - name: GF_LOG_CONSOLE_LEVEL
+          value: "warn"
+        - name: GF_SECURITY_ADMIN_USER
+          value: "admin"
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: "passw0rd"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/grafana/grafana.ini
+        - name: base
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: base
+        persistentVolumeClaim:
+          claimName: coc-v2-grafana
+      - name: config-volume
+        configMap:
+          name: coc-v2-grafana
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coc-v2-grafana
+  labels:
+    service: coc-v2-grafana
+spec:
+  ports:
+  - port: 3000
+    name: api
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: coc-v2-grafana
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: nginx
+  name: coc-v2-grafana
+spec:
+  tls:
+  - hosts:
+    - <HOST>
+    secretName: coc-secret
+  rules:
+  - host: <HOST>
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: coc-v2-grafana
+          servicePort: 3000
