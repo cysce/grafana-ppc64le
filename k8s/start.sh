@@ -23,7 +23,7 @@ echo host $host
 if [[ $base == '' ]]
 then
   printf "*******************************************************************************\n"
-  printf "* Error: Invalid argument. missing --base=/Volumes/DATA/CYSCE/COC2 \n"
+  printf "* Error: Invalid argument. missing --base=/Volumes/DATA/CYSCE/COC2 --base=/home/cocdata/grafana \n"
   printf "*******************************************************************************\n"
   exit 1
 fi
