@@ -101,10 +101,8 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/server-snippets: |
-      location / {
-        proxy_set_header Authorization "Basic YWRtaW46cGFzc3cwcmQ=";
-      }
+    nginx.ingress.kubernetes.io/configuration-snippets: |
+      more_set_headers "Authorization: Basic YWRtaW46cGFzc3cwcmQ=";
   name: coc-v2-grafana
 spec:
   tls:
