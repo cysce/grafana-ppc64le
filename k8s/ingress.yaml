@@ -18,7 +18,7 @@ spec:
   tls:
   - hosts:
     - grafana.cysce.com
-    secretName: coc-secret
+    secretName: grafana-secret
   rules:
   - host: grafana.cysce.com
     http:
