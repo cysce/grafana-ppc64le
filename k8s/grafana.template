@@ -1,9 +1,9 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: coc-v2-grafana
+  name: cysce-grafana
   labels:
-    name: coc-v2-grafana
+    name: cysce-grafana
 spec:
   capacity:
     storage: 200Gi
@@ -17,7 +17,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: coc-v2-grafana
+  name: cysce-grafana
 spec:
   storageClassName: ""
   accessModes:
@@ -27,26 +27,26 @@ spec:
       storage: 200Gi
   selector:
     matchLabels:
-      name: coc-v2-grafana
+      name: cysce-grafana
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coc-v2-grafana
+  name: cysce-grafana
   labels:
-    app: coc-v2-grafana
+    app: cysce-grafana
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: coc-v2-grafana
+      app: cysce-grafana
   template:
     metadata:
       labels:
-        app: coc-v2-grafana
+        app: cysce-grafana
     spec:
       containers:
-      - name: coc-v2-grafana
+      - name: cysce-grafana
         imagePullPolicy: IfNotPresent
         image: docker.io/cysce/grafana-ppc64le:8.0.3
         ports:
@@ -68,17 +68,17 @@ spec:
       volumes:
       - name: base
         persistentVolumeClaim:
-          claimName: coc-v2-grafana
+          claimName: cysce-grafana
       - name: config-volume
         configMap:
-          name: coc-v2-grafana
+          name: cysce-grafana
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: coc-v2-grafana
+  name: cysce-grafana
   labels:
-    service: coc-v2-grafana
+    service: cysce-grafana
 spec:
   ports:
   - port: 3000
@@ -86,4 +86,4 @@ spec:
     targetPort: 3000
     protocol: TCP
   selector:
-    app: coc-v2-grafana
+    app: cysce-grafana
