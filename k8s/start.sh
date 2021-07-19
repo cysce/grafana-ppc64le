@@ -41,6 +41,6 @@ mkdir ${base}/grafana-ppc64le/temp
 cat ${base}/grafana-ppc64le/k8s/grafana.template | sed "s#<HOST>#$host#g" > ${base}/grafana-ppc64le/temp/grafana01.template
 cat ${base}/grafana-ppc64le/temp/grafana01.template | sed "s#<PATH>#$base#g" > ${base}/grafana-ppc64le/temp/deployment.yaml
 
-kubectl create configmap coc-v2-grafana --from-file=${base}/grafana-ppc64le/k8s/grafana.ini
+kubectl create configmap cysce-grafana --from-file=${base}/grafana-ppc64le/k8s/grafana.ini
 kubectl apply -f ${base}/grafana-ppc64le/temp/deployment.yaml
 kubectl apply -f ${base}/grafana-ppc64le/k8s/ingress.yaml
